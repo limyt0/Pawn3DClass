@@ -55,24 +55,31 @@ void AMyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AMyPawn::Move(const FInputActionValue& value) {
 	if (!Controller) return;
 	const FVector2D MoveInput = value.Get<FVector2D>();
-
+	
 	if(!FMath::IsNearlyZero(MoveInput.X))
 	{
-		AddMovementInput(GetActorForwardVector(), MoveInput.X);
-		UE_LOG(LogTemp, Warning, TEXT("Move X"));
+		FVector DeltaLocation(MoveInput.X*5, 0.0f, 0.0f);
+		AddActorLocalOffset(DeltaLocation);
+		//AddMovementInput(GetActorForwardVector(), MoveInput.X);
+		//UE_LOG(LogTemp, Warning, TEXT("Move X: %f"), MoveInput.X);
 	}
 
 	if (!FMath::IsNearlyZero(MoveInput.Y))
 	{
-		AddMovementInput(GetActorRightVector(), MoveInput.Y);
-		UE_LOG(LogTemp, Warning, TEXT("Move Y"));
+		FVector DeltaLocation(0.0f, MoveInput.Y*5, 0.0f);
+		AddActorLocalOffset(DeltaLocation);
+		//AddMovementInput(GetActorRightVector(), MoveInput.Y);
+		//UE_LOG(LogTemp, Warning, TEXT("Move Y: %f"), MoveInput.Y);
 	}
 }
 
 void AMyPawn::Look(const FInputActionValue& value) {
 
 	FVector2D LookInput = value.Get<FVector2D>();
-	UE_LOG(LogTemp, Warning, TEXT("Look"));
-	AddControllerYawInput(LookInput.X);
-	AddControllerPitchInput(LookInput.Y);
+	FRotator DeltaRotation(-1*(LookInput.Y), LookInput.X, 0.0f);
+	AddActorLocalRotation(DeltaRotation);
+	//UE_LOG(LogTemp, Warning, TEXT("Look"));
+	//AddControllerYawInput(LookInput.X);
+	//AddControllerPitchInput(LookInput.Y);
+
 }
